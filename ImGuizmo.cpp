@@ -24,9 +24,9 @@
 // SOFTWARE.
 //
 
-#ifndef IMGUI_DEFINE_MATH_OPERATORS
+
 #define IMGUI_DEFINE_MATH_OPERATORS
-#endif
+
 #include "imgui.h"
 #include "imgui_internal.h"
 #include "ImGuizmo.h"
@@ -39,6 +39,7 @@
 #define _freea(x)
 #endif
 
+
 // includes patches for multiview from
 // https://github.com/CedricGuillemet/ImGuizmo/issues/15
 
@@ -47,7 +48,7 @@ namespace IMGUIZMO_NAMESPACE
    static const float ZPI = 3.14159265358979323846f;
    static const float RAD2DEG = (180.f / ZPI);
    static const float DEG2RAD = (ZPI / 180.f);
-   const float screenRotateSize = 0.06f;
+   const float screenRotateSize = 0.04f;
    // scale a bit so translate axis do not touch when in universal
    const float rotationDisplayFactor = 1.2f;
 
@@ -637,11 +638,11 @@ namespace IMGUIZMO_NAMESPACE
    Style::Style()
    {
       // default values
-      TranslationLineThickness   = 3.0f;
+      TranslationLineThickness   = 6.0f;
       TranslationLineArrowSize   = 6.0f;
-      RotationLineThickness      = 2.0f;
-      RotationOuterLineThickness = 3.0f;
-      ScaleLineThickness         = 3.0f;
+      RotationLineThickness      = 6.0f;
+      RotationOuterLineThickness = 6.0f;
+      ScaleLineThickness         = 6.0f;
       ScaleLineCircleSize        = 6.0f;
       HatchedAxisLineThickness   = 6.0f;
       CenterCircleSize           = 6.0f;
@@ -1229,7 +1230,7 @@ namespace IMGUIZMO_NAMESPACE
       perpendicularVector.Normalize();
       float acosAngle = Clamp(Dot(localPos, gContext.mRotationVectorSource), -1.f, 1.f);
       float angle = acosf(acosAngle);
-      angle *= (Dot(localPos, perpendicularVector) < 0.f) ? 1.f : -1.f;
+      angle *= (Dot(localPos, perpendicularVector) < 0.f) ? 0.9999f : -0.9999f;
       return angle;
    }
 
@@ -1978,7 +1979,7 @@ namespace IMGUIZMO_NAMESPACE
 
       vec_t deltaScreen = { io.MousePos.x - gContext.mScreenSquareCenter.x, io.MousePos.y - gContext.mScreenSquareCenter.y, 0.f, 0.f };
       float dist = deltaScreen.Length();
-      if (Intersects(op, ROTATE_SCREEN) && dist >= (gContext.mRadiusSquareCenter - 4.0f) && dist < (gContext.mRadiusSquareCenter + 4.0f))
+      if (Intersects(op, ROTATE_SCREEN) && dist >= (gContext.mRadiusSquareCenter*1.1f - 3.0f) && dist < (gContext.mRadiusSquareCenter*1.1f + 2.0f))
       {
          type = MT_ROTATE_SCREEN;
       }
@@ -2016,7 +2017,7 @@ namespace IMGUIZMO_NAMESPACE
          const ImVec2 distanceOnScreen = idealPosOnCircleScreen - io.MousePos;
 
          const float distance = makeVect(distanceOnScreen).Length();
-         if (distance < 8.f) // pixel size
+         if (distance < 10.f) // pixel size
          {
             type = MT_ROTATE_X + i;
          }
